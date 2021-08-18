@@ -1,0 +1,28 @@
+.wrapper {
+	text-align: center;
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	background-color: var(--purple);
+}
+
+.board {
+	width: 960px;
+	height: 600px;
+	display: flex;
+	border-radius: 16px;
+	overflow: hidden;
+}
+
+.board__form {
+	padding: 32px;
+	width: 400px;
+	background-color: var(--dark);
+}
+
+.board__content {
+	padding: 32px;
+	background-color: var(--white);
+	flex-grow: 1;
+}
