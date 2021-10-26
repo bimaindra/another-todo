@@ -1,44 +1,127 @@
-import React, { Component } from 'react';
-import './../_styleForm.css';
+import PropTypes from 'prop-types';
+import {
+	FormContainer,
+	FormGroup,
+	FormInput,
+	FormButton,
+	SelectInput,
+	TextArea
+} from './Form.styled';
+import { Button } from './Button.styled';
 
-class Form extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			title: '',
-			priority: '',
-			date: '',
-			task: ''
-		};
-	}
-	render() {
-		return (
-			<form action=''>
-				<div className='form-group'>
-					<input type='text' placeholder='Enter task title' className='form-input' />
-				</div>
-				<div className='form-group flex gap'>
-					<select name='priority' id='priority' className='form-input'>
-						<option value='1'>Low</option>
-						<option value='2'>Medium</option>
-						<option value='3'>High</option>
-					</select>
-					<input type='date' placeholder='Due Date' className='form-input' />
-				</div>
-				<div className='form-group'>
-					<textarea rows='3' placeholder='Enter task description' className='form-input' />
-				</div>
-				<div className='form-group flex gap justify-center form-button'>
-					<button type='submit' className='button button--yellow'>
+const Form = ({
+	dataForm,
+	onHandleUpdateDataForm,
+	onHandleValidateForm,
+	onHandleOnSubmit,
+	onHandleResetForm
+}) => {
+	const onChangeInput = (e, index) => {
+		e.preventDefault();
+		onHandleUpdateDataForm(e.target.value, index);
+	};
+
+	const onSubmit = (e, dataForm) => {
+		e.preventDefault();
+
+		if (!dataForm.title) {
+			alert('Title is empty!');
+			return;
+		}
+
+		if (!dataForm.date) {
+			alert('Date is empty!');
+			return;
+		}
+
+		if (!dataForm.description) {
+			alert('Description is empty!');
+			return;
+		}
+
+		if (!dataForm.priority) {
+			alert('Priority is empty!');
+			return;
+		}
+
+		onHandleOnSubmit(dataForm);
+
+		dataForm.title = '';
+		dataForm.date = '';
+		dataForm.description = '';
+		dataForm.priority = '';
+	};
+
+	const onResetForm = (e, dataForm) => {
+		e.preventDefault();
+
+		onHandleResetForm(dataForm);
+
+		dataForm.title = '';
+		dataForm.date = '';
+		dataForm.description = '';
+		dataForm.priority = '';
+	};
+
+	return (
+		<div>
+			<FormContainer onSubmit={(e) => onSubmit(e, dataForm)}>
+				<FormGroup>
+					<FormInput
+						type='text'
+						placeholder='Enter task title'
+						value={dataForm.title}
+						onChange={(e) => onChangeInput(e, 'title')}
+					/>
+				</FormGroup>
+				<FormGroup>
+					<SelectInput>
+						<select
+							name='priority'
+							id='priority'
+							value={dataForm.priority}
+							onChange={(e) => onChangeInput(e, 'priority')}>
+							<option value=''>===Priority===</option>
+							<option value='Low'>Low</option>
+							<option value='Medium'>Medium</option>
+							<option value='High'>High</option>
+						</select>
+					</SelectInput>
+					<FormInput
+						type='date'
+						placeholder='Due Date'
+						value={dataForm.date}
+						onChange={(e) => onChangeInput(e, 'date')}
+					/>
+				</FormGroup>
+				<FormGroup>
+					<TextArea>
+						<textarea
+							rows='3'
+							placeholder='Enter task description'
+							value={dataForm.description}
+							onChange={(e) => onChangeInput(e, 'description')}></textarea>
+					</TextArea>
+				</FormGroup>
+				<FormButton>
+					<Button type='submit' disabled={!onHandleValidateForm}>
 						Submit
-					</button>
-					<button type='Button' className='button button--blue'>
+					</Button>
+					<Button type='button' color='yellow' onClick={(e) => onResetForm(e, dataForm)}>
 						Cancel
-					</button>
-				</div>
-			</form>
-		);
-	}
-}
+					</Button>
+				</FormButton>
+			</FormContainer>
+		</div>
+	);
+};
+
+Form.propTypes = {
+	dataForm: PropTypes.object,
+	onHandleUpdateDataForm: PropTypes.func,
+	onHandleValidateForm: PropTypes.bool,
+	onHandleOnSubmit: PropTypes.func,
+	onHandleResetForm: PropTypes.func
+};
 
 export default Form;

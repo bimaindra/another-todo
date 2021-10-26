@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './_styleNormalize.css';
-import './_styleIndex.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

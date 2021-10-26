@@ -1,16 +1,13 @@
-import React, { Component } from 'react';
-import './../_styleLogo.css';
+import { LogoBlock } from './Logo.styled';
 
-class Logo extends Component {
-	render() {
-		return (
-			<div className='logo'>
-				<h1>
-					<strong>Todo</strong>-list
-				</h1>
-			</div>
-		);
-	}
-}
+const Logo = () => {
+	return (
+		<LogoBlock>
+			<h1>
+				<strong>Todo</strong>-list
+			</h1>
+		</LogoBlock>
+	);
+};
 
 export default Logo;
