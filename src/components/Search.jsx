@@ -3,13 +3,16 @@ import { FormInput, SelectInput } from './Form.styled';
 import { SearchContainer, SearchInput, SearchClearButton } from './Search.styled';
 import { BiXCircle } from 'react-icons/bi';
 
-const SearchForm = ({ dataFilter, onHandleFilterTask }) => {
+const SearchForm = ({ dataFilter, onHandleFilterTask, onHandleClearSearch }) => {
 	const onChangeinput = (e, index) => {
 		onHandleFilterTask(e.target.value, index);
 	};
 
-	const handleClearSearchKeyword = (e) => {
+	const handleClearSearchKeyword = (e, dataFilter) => {
 		e.preventDefault();
+
+		onHandleClearSearch(dataFilter);
+
 		dataFilter.keyword = '';
 	};
 
@@ -25,11 +28,14 @@ const SearchForm = ({ dataFilter, onHandleFilterTask }) => {
 				</SelectInput>
 				<SearchInput>
 					<FormInput
+						id='input-search'
 						placeholder='Search by title...'
 						value={dataFilter.keyword}
 						onChange={(e) => onChangeinput(e, 'keyword')}
 					/>
-					<SearchClearButton className='__Icon' onClick={(e) => handleClearSearchKeyword(e)}>
+					<SearchClearButton
+						className='__Icon'
+						onClick={(e) => handleClearSearchKeyword(e, dataFilter)}>
 						<BiXCircle></BiXCircle>
 					</SearchClearButton>
 				</SearchInput>
@@ -40,7 +46,8 @@ const SearchForm = ({ dataFilter, onHandleFilterTask }) => {
 
 SearchForm.propTypes = {
 	dataFilter: PropTypes.object,
-	onHandleFilterTask: PropTypes.func
+	onHandleFilterTask: PropTypes.func,
+	onHandleClearSearch: PropTypes.func
 };
 
 export default SearchForm;

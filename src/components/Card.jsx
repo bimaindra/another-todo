@@ -1,3 +1,4 @@
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Badge from './Badge';
 import { BiDotsHorizontalRounded, BiXCircle } from 'react-icons/bi';
@@ -11,12 +12,32 @@ const CardTask = ({
 	task,
 	onHandleDeleteTask,
 	onHandleOpenTooltip,
+	onHandleCloseTooltip,
 	onHandleShowDetail,
 	onHandleCloseDetail,
 	onHandleTaskComplete,
-	onHandleRef,
 	isTooltip
 }) => {
+	const ref = useRef();
+
+	useEffect(() => {
+		const checkIfClickedOutside = (e) => {
+			// If the menu is open and the clicked target is not within the menu,
+			// then close the menu
+			if (isTooltip && ref.current && !ref.current.contains(e.target)) {
+				onHandleCloseTooltip();
+				console.log(ref.current);
+			}
+		};
+
+		document.addEventListener('mousedown', checkIfClickedOutside);
+
+		return () => {
+			// Cleanup the event listener
+			document.removeEventListener('mousedown', checkIfClickedOutside);
+		};
+	}, [isTooltip]);
+
 	return (
 		<div>
 			<CardList>
@@ -42,7 +63,7 @@ const CardTask = ({
 					</FlexDefault>
 					<FlexDefault>
 						<CardCol>
-							<Tooltip ref={onHandleRef}>
+							<Tooltip ref={ref}>
 								<BiDotsHorizontalRounded
 									className='__icon'
 									onClick={(e) => onHandleOpenTooltip(e, task.id)}

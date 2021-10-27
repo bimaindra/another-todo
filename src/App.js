@@ -51,29 +51,30 @@ export class App extends React.Component {
 		this.handleShowDetail = this.handleShowDetail.bind(this);
 		this.handleCloseDetail = this.handleCloseDetail.bind(this);
 		this.handleCompleteTask = this.handleCompleteTask.bind(this);
-		this.wrapperRef = React.createRef();
+		//this.wrapperRef = React.createRef();
 		this.handleCloseTooltip = this.handleCloseTooltip.bind(this);
 		this.handleFilterTask = this.handleFilterTask.bind(this);
+		this.handleClearSearch = this.handleClearSearch.bind(this);
 	}
 
 	componentDidMount() {
 		//console.log(`App Component didMount`)
-		document.addEventListener('mousedown', this.handleCloseTooltip);
 
 		// Get dataTask from localstorage
 		this.handleGetFromLocal();
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps, prevState) {
 		//console.log(`App Component didUpdate`);
 
 		// Save/push dataTask to localstorage
 		this.handleSaveToLocal();
+
+		// this.handleFilteredTask();
 	}
 
 	componentWillUnmount() {
-		//console.log(`App Component willUnmount`);
-		document.addEventListener('mousedown', this.handleCloseTooltip);
+		console.log(`App Component willUnmount`);
 	}
 
 	handleValidateForm() {
@@ -132,6 +133,7 @@ export class App extends React.Component {
 		this.setState({
 			dataTask: filteredState
 		});
+
 	}
 
 	handleSaveToLocal() {
@@ -151,14 +153,8 @@ export class App extends React.Component {
 		this.setState({ tooltipActive: id });
 	}
 
-	handleCloseTooltip(e, id) {
-		console.log('current ===> ', this.wrapperRef);
-		console.log('contain ===> ', e.target);
-		console.log('id ===> ', id);
-
-		//if (this.wrapperRef && !this.wrapperRef.current.contains(e.target)) {
-		//	this.setState({ tooltipActive: id });
-		//}
+	handleCloseTooltip() {
+		this.setState({ tooltipActive: '' });
 	}
 
 	handleShowDetail(e, id) {
@@ -203,13 +199,31 @@ export class App extends React.Component {
 		this.setState({ dataFilter: tempDataFilter });
 	}
 
+	handleClearSearch(dataFilter) {
+		this.setState({ dataFilter: dataFilter });
+	}
+
 	render() {
-		const { dataForm, dataTask, dataFilter, tooltipActive } = this.state;
-		let taskIncompleted = [];
-		let taskCompleted = [];
+		const { dataForm, dataTask, dataFilter, dataSort, tooltipActive } = this.state;
+		const taskIncompleted = [];
+		const taskCompleted = [];
+
+		// Default data
+		dataTask.sort(
+			(a, b) => new Date(...a.date.split('/').reverse()) - new Date(...b.date.split('/').reverse())
+		);
+
+		// Search keyword
+		const filtered = dataTask.filter((task) => {
+			if (dataFilter.keyword === '' || dataFilter.keyword.length < 2) {
+				return task;
+			} else if (task.title.toLowerCase().includes(dataFilter.keyword.toLowerCase())) {
+				return task;
+			}
+		});
 
 		// DATA TASK INCOMPLETED
-		dataTask
+		filtered
 			.filter((isComplete) => isComplete.isComplete === false)
 			.map((task) =>
 				taskIncompleted.push(
@@ -218,17 +232,17 @@ export class App extends React.Component {
 						task={task}
 						onHandleDeleteTask={this.handleDeleteTask}
 						onHandleOpenTooltip={this.handleOpenTooltip}
+						onHandleCloseTooltip={this.handleCloseTooltip}
 						onHandleShowDetail={this.handleShowDetail}
 						onHandleCloseDetail={this.handleCloseDetail}
 						onHandleTaskComplete={this.handleCompleteTask}
-						onHandleRef={this.wrapperRef}
 						isTooltip={task.id === tooltipActive}
 					/>
 				)
 			);
 
 		// DATA TASK COMPLETED
-		dataTask
+		filtered
 			.filter((isComplete) => isComplete.isComplete === true)
 			.map((task) =>
 				taskCompleted.push(
@@ -237,10 +251,10 @@ export class App extends React.Component {
 						task={task}
 						onHandleDeleteTask={this.handleDeleteTask}
 						onHandleOpenTooltip={this.handleOpenTooltip}
+						onHandleCloseTooltip={this.handleCloseTooltip}
 						onHandleShowDetail={this.handleShowDetail}
 						onHandleCloseDetail={this.handleCloseDetail}
 						onHandleTaskComplete={this.handleCompleteTask}
-						onHandleRef={this.wrapperRef}
 						isTooltip={task.id === tooltipActive}
 					/>
 				)
@@ -262,7 +276,11 @@ export class App extends React.Component {
 							/>
 						</BoardForm>
 						<BoardContent>
-							<Search dataFilter={dataFilter} onHandleFilterTask={this.handleFilterTask} />
+							<Search
+								dataFilter={dataFilter}
+								onHandleFilterTask={this.handleFilterTask}
+								onHandleClearSearch={this.handleClearSearch}
+							/>
 							{dataTask.length > 0 ? (
 								<div>
 									{taskIncompleted}
