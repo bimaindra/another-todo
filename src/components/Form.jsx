@@ -82,9 +82,9 @@ const Form = ({
 							value={dataForm.priority}
 							onChange={(e) => onChangeInput(e, 'priority')}>
 							<option value=''>===Priority===</option>
-							<option value='Low'>Low</option>
-							<option value='Medium'>Medium</option>
-							<option value='High'>High</option>
+							<option value='0'>Low</option>
+							<option value='1'>Medium</option>
+							<option value='2'>High</option>
 						</select>
 					</SelectInput>
 					<FormInput

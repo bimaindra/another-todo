@@ -21,8 +21,8 @@ const SearchForm = ({ dataFilter, onHandleFilterTask, onHandleClearSearch }) => 
 			<SearchContainer>
 				<SelectInput>
 					<select value={dataFilter.sortBy} onChange={(e) => onChangeinput(e, 'sortBy')}>
-						<option value='0'>Sort By</option>
-						<option value='1'>Low</option>
+						<option value='empty'>Sort By</option>
+						<option value='0'>Low</option>
 						<option value='2'>High</option>
 					</select>
 				</SelectInput>

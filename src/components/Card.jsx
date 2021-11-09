@@ -26,7 +26,7 @@ const CardTask = ({
 			// then close the menu
 			if (isTooltip && ref.current && !ref.current.contains(e.target)) {
 				onHandleCloseTooltip();
-				console.log(ref.current);
+				//console.log(ref.current);
 			}
 		};
 
@@ -40,7 +40,9 @@ const CardTask = ({
 
 	return (
 		<div>
-			<CardList>
+			<CardList
+				className={task.isComplete ? '__Completed' : false}
+				style={task.isShowDetail ? { overflow: 'hidden' } : { overflow: 'inherit' }}>
 				<FlexItemCenter>
 					<FlexDefault>
 						<CardCol className='__Border'>

@@ -144,14 +144,17 @@ summary {
   --yellow: #FFD717;
   --blue: #0D63A5;
   --dark: #083358;
+	--dark-blue: #001f3f;
   --purple: #393E6F;
+	--light-grey: #F2F2F2;
 	--grey: #808080;
 	--red: #ff1717;
 }
 
 body {
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+	font-family: 'Nunito Sans', 'Roboto', 'Helvetica Neue', sans-serif;
+	font-weight: 400;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -160,4 +163,12 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: 600;
+}
 `;

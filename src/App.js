@@ -6,8 +6,9 @@ import Search from './components/Search';
 import { GlobalStyles } from './components/GlobalStyles.styled';
 import { Wrapper } from './components/Wrapper.styled';
 import { Board, BoardForm, BoardContent } from './components/Board.styled';
-import { Centered } from './components/Utility.styled';
+import { Centered, SectionTitleSeparate } from './components/Utility.styled';
 import ImageEmptyTask from './empty-task.png';
+import ImageEmptySearch from './empty-search.png';
 
 export class App extends React.Component {
 	constructor(props) {
@@ -25,19 +26,8 @@ export class App extends React.Component {
 			dataTask: [],
 			dataFilter: {
 				keyword: '',
-				sortBy: 0
+				sortBy: ''
 			},
-			dataSort: [
-				{
-					0: 'Sort By'
-				},
-				{
-					1: 'Low'
-				},
-				{
-					2: 'High'
-				}
-			],
 			isValidate: false,
 			tooltipActive: ''
 		};
@@ -93,6 +83,11 @@ export class App extends React.Component {
 			valid = false;
 		}
 
+		if (dataForm.description.length > 200) {
+			alert('Maximum character 200 char');
+			valid = false;
+		}
+
 		if (dataForm.priority.length === 0) {
 			valid = false;
 		}
@@ -133,7 +128,6 @@ export class App extends React.Component {
 		this.setState({
 			dataTask: filteredState
 		});
-
 	}
 
 	handleSaveToLocal() {
@@ -204,7 +198,8 @@ export class App extends React.Component {
 	}
 
 	render() {
-		const { dataForm, dataTask, dataFilter, dataSort, tooltipActive } = this.state;
+		const { dataForm, dataTask, dataFilter, tooltipActive } = this.state;
+		const rankOrder = `${[dataFilter.sortBy]}`;
 		const taskIncompleted = [];
 		const taskCompleted = [];
 
@@ -212,6 +207,9 @@ export class App extends React.Component {
 		dataTask.sort(
 			(a, b) => new Date(...a.date.split('/').reverse()) - new Date(...b.date.split('/').reverse())
 		);
+
+		// Sort data
+		dataTask.sort((a, b) => rankOrder.indexOf(b.priority) - rankOrder.indexOf(a.priority));
 
 		// Search keyword
 		const filtered = dataTask.filter((task) => {
@@ -223,42 +221,45 @@ export class App extends React.Component {
 		});
 
 		// DATA TASK INCOMPLETED
-		filtered
-			.filter((isComplete) => isComplete.isComplete === false)
-			.map((task) =>
-				taskIncompleted.push(
-					<Card
-						key={`cardTask-${task.id}`}
-						task={task}
-						onHandleDeleteTask={this.handleDeleteTask}
-						onHandleOpenTooltip={this.handleOpenTooltip}
-						onHandleCloseTooltip={this.handleCloseTooltip}
-						onHandleShowDetail={this.handleShowDetail}
-						onHandleCloseDetail={this.handleCloseDetail}
-						onHandleTaskComplete={this.handleCompleteTask}
-						isTooltip={task.id === tooltipActive}
-					/>
-				)
-			);
+		if (filtered.length !== 0) {
+			filtered
+				.filter((isComplete) => isComplete.isComplete === false)
+				.map((task) =>
+					taskIncompleted.push(
+						<Card
+							key={`cardTask-${task.id}`}
+							task={task}
+							onHandleDeleteTask={this.handleDeleteTask}
+							onHandleOpenTooltip={this.handleOpenTooltip}
+							onHandleCloseTooltip={this.handleCloseTooltip}
+							onHandleShowDetail={this.handleShowDetail}
+							onHandleCloseDetail={this.handleCloseDetail}
+							onHandleTaskComplete={this.handleCompleteTask}
+							isTooltip={task.id === tooltipActive}
+						/>
+					)
+				);
 
-		// DATA TASK COMPLETED
-		filtered
-			.filter((isComplete) => isComplete.isComplete === true)
-			.map((task) =>
-				taskCompleted.push(
-					<Card
-						key={`cardTask-${task.id}`}
-						task={task}
-						onHandleDeleteTask={this.handleDeleteTask}
-						onHandleOpenTooltip={this.handleOpenTooltip}
-						onHandleCloseTooltip={this.handleCloseTooltip}
-						onHandleShowDetail={this.handleShowDetail}
-						onHandleCloseDetail={this.handleCloseDetail}
-						onHandleTaskComplete={this.handleCompleteTask}
-						isTooltip={task.id === tooltipActive}
-					/>
-				)
-			);
+			// DATA TASK COMPLETED
+			filtered
+				.filter((isComplete) => isComplete.isComplete === true)
+				.map((task) =>
+					taskCompleted.push(
+						<Card
+							className='test'
+							key={`cardTask-${task.id}`}
+							task={task}
+							onHandleDeleteTask={this.handleDeleteTask}
+							onHandleOpenTooltip={this.handleOpenTooltip}
+							onHandleCloseTooltip={this.handleCloseTooltip}
+							onHandleShowDetail={this.handleShowDetail}
+							onHandleCloseDetail={this.handleCloseDetail}
+							onHandleTaskComplete={this.handleCompleteTask}
+							isTooltip={task.id === tooltipActive}
+						/>
+					)
+				);
+		}
 
 		return (
 			<div>
@@ -283,15 +284,28 @@ export class App extends React.Component {
 							/>
 							{dataTask.length > 0 ? (
 								<div>
-									{taskIncompleted}
-
-									{taskCompleted.length === 0 ? (
-										true
-									) : (
+									{taskCompleted.length !== 0 || taskIncompleted.length !== 0 ? (
 										<div>
-											<h2>Task Completed</h2>
-											{taskCompleted}
+											{taskIncompleted}
+
+											{taskCompleted.length === 0 ? (
+												true
+											) : (
+												<div>
+													<SectionTitleSeparate>
+														<span>Task Completed</span>
+													</SectionTitleSeparate>
+													{taskCompleted}
+												</div>
+											)}
 										</div>
+									) : (
+										<Centered>
+											<div>
+												<img src={ImageEmptySearch} alt='BIM' />
+												<p>Ga nemu bro yang di cari...</p>
+											</div>
+										</Centered>
 									)}
 								</div>
 							) : (
