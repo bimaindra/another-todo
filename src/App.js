@@ -217,6 +217,8 @@ export class App extends React.Component {
 				return task;
 			} else if (task.title.toLowerCase().includes(dataFilter.keyword.toLowerCase())) {
 				return task;
+			} else {
+				return task;
 			}
 		});
 
