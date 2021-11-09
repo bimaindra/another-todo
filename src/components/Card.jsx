@@ -35,7 +35,8 @@ const CardTask = ({
 		return () => {
 			// Cleanup the event listener
 			document.removeEventListener('mousedown', checkIfClickedOutside);
-		};
+		}; 
+		// eslint-disable-next-line
 	}, [isTooltip]);
 
 	return (

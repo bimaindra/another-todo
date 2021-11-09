@@ -54,7 +54,7 @@ export class App extends React.Component {
 		this.handleGetFromLocal();
 	}
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate() {
 		//console.log(`App Component didUpdate`);
 
 		// Save/push dataTask to localstorage
